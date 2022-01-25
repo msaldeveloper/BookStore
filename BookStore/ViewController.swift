@@ -85,6 +85,7 @@ class ViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.7 )]
         )
         emailText?.font = .systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
+        emailText?.textColor = .black
         emailText?.keyboardType = .emailAddress
         emailTextField?.addSubview(emailText!)
         emailText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 10, bottom: 10)
@@ -109,6 +110,7 @@ class ViewController: UIViewController {
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.7 )]
         )
         passwordText?.font = .systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
+        passwordText?.textColor = .black
         passwordText?.isSecureTextEntry = true
         passwordTextField?.addSubview(passwordText!)
         passwordText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 10, bottom: 10)
@@ -121,6 +123,8 @@ class ViewController: UIViewController {
         confirmButton?.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         view.addSubview(confirmButton!)
         confirmButton?.addAnchorsAndSize(width: width - 40, height: 50, left: 12, top: height/10, right: 12, bottom: nil, withAnchor: .top, relativeToView: passwordTextField)
+        let tapLoginButton = UITapGestureRecognizer(target: self, action: #selector(buttonAction))
+        confirmButton?.addGestureRecognizer(tapLoginButton)
         
         // MARK: - FOOTER LABEL
         footerLabel = UIButton()
@@ -132,14 +136,15 @@ class ViewController: UIViewController {
         footerLabel?.addTarget(self, action: #selector(registerButton), for: .touchUpInside)
         view.addSubview(footerLabel!)
         footerLabel?.addAnchorsAndSize(width: width - 40, height: 50, left: 12, top:0, right: 12, bottom: nil, withAnchor: .top, relativeToView: confirmButton)
+        let tapRegisterButton = UITapGestureRecognizer(target: self, action: #selector(registerButton))
+        footerLabel?.addGestureRecognizer(tapRegisterButton)
         
         //Looks for single or multiple taps.
-             let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+        
 
             //Uncomment the line below if you want the tap not not interfere and cancel other interactions.
             //tap.cancelsTouchesInView = false
 
-            view.addGestureRecognizer(tap)
         
     }
     @objc func buttonAction() {
@@ -147,7 +152,9 @@ class ViewController: UIViewController {
     }
     
     @objc func registerButton() {
-        print("register button press")
+        let LoginViewController = LoginViewController()
+        
+        present(LoginViewController,animated: true,completion:{print("register button press")} )
     }
     
     @objc func dismissKeyboard() {
