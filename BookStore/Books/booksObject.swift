@@ -33,7 +33,6 @@ class Category {
     
     init(categoryName : String){
         self.categoryName = categoryName
-        self.categoryAuthor = categoryAuthor
         
     }
 }

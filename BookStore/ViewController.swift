@@ -150,7 +150,8 @@ class ViewController: UIViewController {
     @objc func buttonAction() {
         print("button press")
         let BooksViewController = BooksViewController()
-        navigationController?.pushViewController(BooksViewController, animated: true)
+        present(BooksViewController,animated: true,completion:{print("register button press")} )
+        //navigationController?.pushViewController(BooksViewController, animated: true)
     }
     
     @objc func registerButton() {

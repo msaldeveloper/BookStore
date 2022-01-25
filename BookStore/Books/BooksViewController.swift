@@ -12,18 +12,61 @@ class BooksViewController: UIViewController {
     var height = UIScreen.main.bounds.height
     var backgroundColor = UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1)
     var dataSource : bookObject?
+    var topImageView : UIImageView?
+    
+    var booksCollectionView : UICollectionView = { // Ponemos el nombre de la var, su tipo y lo igualamaos a {}()
+        
+        let layout = UICollectionViewFlowLayout() // Declaramo un layout el cual nos servirá para definir los atributtos del collectionView
+       // layout.scrollDirection = .horizontal// Aqui definimos el tipo de scroll que tendrá el collection
+       
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 20
+        layout.minimumInteritemSpacing = 20
+        
+        let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collection.register(BooksCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collection.isPagingEnabled = true
+        collection.translatesAutoresizingMaskIntoConstraints = false
+        collection.backgroundColor = .white
+        collection.layer.cornerRadius = 10
+        collection.showsVerticalScrollIndicator = true
+        collection.showsHorizontalScrollIndicator = true
+        return collection // Debemos retornar un valor del tipo del cual estamos declarando
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = backgroundColor
+        initUi()
+        getData()
 
         // Do any additional setup after loading the view.
     }
     
     func initUi() {
+        topImageView = UIImageView(frame: .zero)
+        topImageView?.image = UIImage(named: "topImage")
+        //let frames: ()? = topImageView?.addAnchorsAndSize(width: nil, height: 150, left: 0, top: 0, right: 0, bottom: nil)
+        let topImageGradient = CAGradientLayer()
+        topImageGradient.frame = CGRect(x: 0, y: 0, width: width, height: 200)
+        topImageGradient.colors = [UIColor.clear.cgColor, UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1).cgColor]
+        topImageGradient.locations = [0.0, 1.0]
+        topImageView?.layer.insertSublayer(topImageGradient, at: 0)
+//        topImageView?.layer.borderColor = .init(red: 255, green: 0, blue: 0, alpha: 1  )
+//        topImageView?.layer.borderWidth = 1
+        view.addSubview(topImageView!)
+        topImageView?.addAnchorsAndSize(width: nil, height: 200, left: 0, top: 0, right: 0, bottom: nil)
         
+        booksCollectionView.delegate = self
+        booksCollectionView.dataSource = self
+        view.addSubview(booksCollectionView)
+        booksCollectionView.addAnchorsWithMargin(20)
+        //booksCollectionView.addAnchors(left: 10, top: 50, right: 0, bottom: nil, withAnchor: .top, relativeToView: topImageView)
+        guard let topImageView = self.topImageView else { return }
+        booksCollectionView.topAnchor.constraint(equalTo: topImageView.topAnchor, constant: 500) .isActive = true
     }
     
-    func getData () {
+    func getData() {
         // MARK: - LIBROS
         let elSeñorDeLosAnillos = Libro(bookTitle: "El señor de los anillos", bookPrice: 400, bookPages: 423, bookFormat: "ebook", bookDescription: "La novela narra el viaje del protagonista principal, Frodo Bolsón, hobbit de la Comarca, para destruir el Anillo Único y la consiguiente guerra que provocará el enemigo para recuperarlo, ya que es la principal fuente de poder de su creador, el Señor oscuro, Sauron.", bookLanguage: "español", bookImage: "el señor de los anillos")
         let historiasMexicas = Libro(bookTitle: "Historias Mexicas", bookPrice: 450, bookPages: 271, bookFormat: "pasta blanda", bookDescription: "Historias mexicas nos lleva a pensar las crónicas indígenas como el producto de un diálogo complejo entre lo indígena y lo europeo, y, en este caso, no sólo serían obra de invención, sino también de reinvención. Aquí el indígena es un ser activo y no aquello que la cotidianidad se ha acostumbrado a hacer de menos.", bookLanguage: "español", bookImage: "historias mexicas")
@@ -86,18 +129,31 @@ class BooksViewController: UIViewController {
         
         dataSource = books
         
-       
+        booksCollectionView.reloadData()
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+}
+extension BooksViewController : UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return dataSource?.authorName?[section].authorBooks?.count ?? 0
     }
-    */
-
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return dataSource?.categoryName?.count ?? 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = booksCollectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! BooksCollectionViewCell
+        let libros = dataSource?.authorName?[indexPath.section].authorBooks?[indexPath.item]
+        cell.setDataBook(libro: libros!)
+        
+        return cell;
+    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: width/1.2, height: height/4)
+    }
+    
+    
 }
