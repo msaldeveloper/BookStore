@@ -13,6 +13,10 @@
 		E77E64AB279B56D4001C3324 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E77E64A9279B56D4001C3324 /* Main.storyboard */; };
 		E77E64AD279B56D5001C3324 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E77E64AC279B56D5001C3324 /* Assets.xcassets */; };
 		E77E64B0279B56D5001C3324 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E77E64AE279B56D5001C3324 /* LaunchScreen.storyboard */; };
+		E77E64B9279BBE90001C3324 /* customerObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77E64B8279BBE90001C3324 /* customerObject.swift */; };
+		E77E64BC279BBFE7001C3324 /* booksObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77E64BB279BBFE7001C3324 /* booksObject.swift */; };
+		E77E64C1279BC8FA001C3324 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77E64C0279BC8FA001C3324 /* LoginViewController.swift */; };
+		E77E64C4279BCBF1001C3324 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = E77E64C3279BCBF1001C3324 /* File.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +28,10 @@
 		E77E64AC279B56D5001C3324 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E77E64AF279B56D5001C3324 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E77E64B1279B56D5001C3324 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E77E64B8279BBE90001C3324 /* customerObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = customerObject.swift; sourceTree = "<group>"; };
+		E77E64BB279BBFE7001C3324 /* booksObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = booksObject.swift; sourceTree = "<group>"; };
+		E77E64C0279BC8FA001C3324 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		E77E64C3279BCBF1001C3324 /* File.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +64,10 @@
 		E77E64A2279B56D4001C3324 /* BookStore */ = {
 			isa = PBXGroup;
 			children = (
+				E77E64C2279BCBDD001C3324 /* Utils */,
+				E77E64BD279BC6D6001C3324 /* Login */,
+				E77E64BA279BBFCA001C3324 /* Books */,
+				E77E64B7279BBDFE001C3324 /* customers */,
 				E77E64A3279B56D4001C3324 /* AppDelegate.swift */,
 				E77E64A5279B56D4001C3324 /* SceneDelegate.swift */,
 				E77E64A7279B56D4001C3324 /* ViewController.swift */,
@@ -65,6 +77,38 @@
 				E77E64B1279B56D5001C3324 /* Info.plist */,
 			);
 			path = BookStore;
+			sourceTree = "<group>";
+		};
+		E77E64B7279BBDFE001C3324 /* customers */ = {
+			isa = PBXGroup;
+			children = (
+				E77E64B8279BBE90001C3324 /* customerObject.swift */,
+			);
+			path = customers;
+			sourceTree = "<group>";
+		};
+		E77E64BA279BBFCA001C3324 /* Books */ = {
+			isa = PBXGroup;
+			children = (
+				E77E64BB279BBFE7001C3324 /* booksObject.swift */,
+			);
+			path = Books;
+			sourceTree = "<group>";
+		};
+		E77E64BD279BC6D6001C3324 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				E77E64C0279BC8FA001C3324 /* LoginViewController.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
+		E77E64C2279BCBDD001C3324 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				E77E64C3279BCBF1001C3324 /* File.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -138,6 +182,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E77E64C1279BC8FA001C3324 /* LoginViewController.swift in Sources */,
+				E77E64B9279BBE90001C3324 /* customerObject.swift in Sources */,
+				E77E64C4279BCBF1001C3324 /* File.swift in Sources */,
+				E77E64BC279BBFE7001C3324 /* booksObject.swift in Sources */,
 				E77E64A8279B56D4001C3324 /* ViewController.swift in Sources */,
 				E77E64A4279B56D4001C3324 /* AppDelegate.swift in Sources */,
 				E77E64A6279B56D4001C3324 /* SceneDelegate.swift in Sources */,
