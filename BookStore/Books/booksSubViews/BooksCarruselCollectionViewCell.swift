@@ -12,7 +12,7 @@ class BooksCarruselCollectionViewCell: UICollectionViewCell {
         let image = UIImageView()
         image.backgroundColor = .clear
         image.contentMode = .scaleAspectFit
-        image.image = UIImage(named: "forward")
+        image.image = UIImage(named: "book")
         return image
     }()
     override init(frame : CGRect){
@@ -20,7 +20,7 @@ class BooksCarruselCollectionViewCell: UICollectionViewCell {
         //imageProduct.backgroundColor = .white
         self.addSubview(imageProduct)
     }
-    func setDataBook(libro : Libro){
+    func setDataBook2(libro : Libro){
         let image = NSString(string: libro.bookImage ?? "")
         print (image)
         switch image {

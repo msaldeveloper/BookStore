@@ -36,11 +36,10 @@ class Libro {
     var bookDescription : String?
     var bookLanguage : String?
     var bookImage : String?
-    var author : Author?
-    var categoria : Category?
+    var author : String?
     
     init(bookTitle : String, bookPrice : Float, bookPages : Int, bookFormat : String,
-         bookDescription : String, bookLanguage :String, bookImage : String?){
+         bookDescription : String, bookLanguage :String, bookImage : String, author : String){
         self.bookTitle = bookTitle
         self.bookPrice = bookPrice
         self.bookPages = bookPages
@@ -48,5 +47,6 @@ class Libro {
         self.bookDescription = bookDescription
         self.bookLanguage = bookLanguage
         self.bookImage = bookImage
+        self.author = author
     }
 }

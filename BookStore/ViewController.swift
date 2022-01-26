@@ -149,9 +149,21 @@ class ViewController: UIViewController {
     }
     @objc func buttonAction() {
         print("button press")
-        let BooksViewController = BooksViewController()
-        BooksViewController.modalPresentationStyle = .fullScreen
-        present(BooksViewController,animated: true,completion:{print("register button press")} )
+        print (emailText?.text)
+        if (emailText?.text != nil || emailText?.text != "") {
+            let BooksViewController = BooksViewController()
+            BooksViewController.modalPresentationStyle = .fullScreen
+            present(BooksViewController,animated: true,completion:{print("register button press")} )
+        }else if (passwordText?.text) != nil{
+            let BooksViewController = BooksViewController()
+            BooksViewController.modalPresentationStyle = .fullScreen
+            present(BooksViewController,animated: true,completion:{print("register button press")} )
+        }else {
+            let alert = UIAlertController(title: "Error en datos", message: "Ingresa Un Correo Electronico Y una Contraseña.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        
         //navigationController?.pushViewController(BooksViewController, animated: true)
     }
     
