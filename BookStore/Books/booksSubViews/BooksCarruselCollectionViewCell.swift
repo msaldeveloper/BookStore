@@ -20,7 +20,7 @@ class BooksCarruselCollectionViewCell: UICollectionViewCell {
         //imageProduct.backgroundColor = .white
         self.addSubview(imageProduct)
     }
-    func setDataBook2(libro : Libro){
+    func setDataBook(libro : Libro){
         let image = NSString(string: libro.bookImage ?? "")
         print (image)
         switch image {

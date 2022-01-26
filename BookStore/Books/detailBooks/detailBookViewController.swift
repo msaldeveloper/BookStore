@@ -129,7 +129,7 @@ class detailProductViewController: UIViewController {
         productContentView?.addSubview(productName!)
         
         productName = UILabel(frame: CGRect(x: 100  , y: 30, width: width/1.2, height: 100))
-        productName?.text = product?.author
+        productName?.text = product?.author?.authorName
         productName?.font = UIFont(name: "Helvetica", size: 25)
         productName?.textAlignment = .left
         productName?.textColor = UIColor(red: 0, green: 0, blue: 102/255, alpha: 1)
@@ -182,7 +182,7 @@ class detailProductViewController: UIViewController {
         productContentView?.addSubview(productName!)
         
         productDescription = UILabel(frame: CGRect(x: width/2.6, y: height/7, width: width/4, height: 100))
-        productDescription?.text = "\(String(describing: product?.author ?? ""))"
+        productDescription?.text = "\(String(describing: product?.author?.authorName ?? ""))"
         productDescription?.numberOfLines = 2
         productDescription?.font = UIFont(name: "Helvetica", size: 18)
         productDescription?.textAlignment = .left

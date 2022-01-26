@@ -29,48 +29,53 @@ class BooksCollectionViewCell: UICollectionViewCell {
     }()
     var nameAuthor : UILabel = {
         let authorLabel = UILabel()
-        authorLabel.textColor = .yellow
         authorLabel.text = "Author"
-        authorLabel.backgroundColor = .magenta
-        authorLabel.font = .boldSystemFont(ofSize: 10)
+        authorLabel.textColor = .yellow
+        authorLabel.backgroundColor = .clear
+        authorLabel.textColor = .gray
+        authorLabel.adjustsFontSizeToFitWidth = true
+        authorLabel.font = .boldSystemFont(ofSize: 15)
         return authorLabel
     }()
     var nameCategory : UILabel = {
         let categoryLabel = UILabel()
         categoryLabel.textColor = .yellow
         categoryLabel.text = "Cathegory"
-        categoryLabel.backgroundColor = .magenta
-        categoryLabel.font = .boldSystemFont(ofSize: 10)
+        categoryLabel.backgroundColor = .clear
+        categoryLabel.textColor = .gray
+        categoryLabel.font = .boldSystemFont(ofSize: 15)
         return categoryLabel
     }()
     var forwardImage : UIImageView = {
         let forwardImage = UIImageView()
-        forwardImage.backgroundColor = .orange
+        forwardImage.backgroundColor = .clear
         forwardImage.contentMode = .scaleAspectFit
         forwardImage.image = UIImage(named: "forward")
         return forwardImage
     }()
     override init(frame : CGRect){
         super.init(frame: .zero)
+        self.layer.cornerRadius = 10
+        //let color = UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1)
+        self.backgroundColor = .white
         
-        let color = UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1)
-        self.backgroundColor = color
         
-        imageProduct.backgroundColor = .clear
         self.addSubview(imageProduct)
         imageProduct.addAnchorsAndSize(width: 120, height: 180, left: 10, top: 10, right: nil, bottom: nil)
         
         self.addSubview(nameProduct)
         nameProduct.addAnchorsAndSize(width: 180, height: 80, left: 10, top: 40, right: nil, bottom: nil, withAnchor: .left, relativeToView: imageProduct)
-//        
-//        self.addSubview(nameAuthor)
-//        nameProduct.addAnchorsAndSize(width: 200, height: 20, left: 10, top: 60, right: nil, bottom: nil, withAnchor: .left, relativeToView: imageProduct)
-//        
-//        self.addSubview(nameCategory)
-//        nameProduct.addAnchorsAndSize(width: 200, height: 20, left: 10, top: 80, right: nil, bottom: nil, withAnchor: .left, relativeToView: imageProduct)
-//        
-//        self.addSubview(forwardImage)
-//        nameProduct.addAnchorsAndSize(width: 50, height: 50, left: nil, top: 100, right: 20, bottom: nil)
+        
+        self.addSubview(nameAuthor)
+        nameAuthor.addAnchorsAndSize(width: 150, height: 40, left: 10, top: 80, right: nil, bottom: nil, withAnchor: .left, relativeToView: imageProduct)
+        nameAuthor.addAnchors(left: nil, top: 15, right: nil, bottom: nil, withAnchor: .top, relativeToView: nameProduct)
+        
+        self.addSubview(nameCategory)
+        nameCategory.addAnchorsAndSize(width: 150, height: 40, left: 10, top: nil, right: nil, bottom: nil, withAnchor: .left, relativeToView: imageProduct)
+        nameCategory.addAnchors(left: nil, top: 5, right: nil, bottom: nil, withAnchor: .top, relativeToView: nameAuthor)
+        
+        self.addSubview(forwardImage)
+        forwardImage.addAnchorsAndSize(width: 50, height: 50, left: nil, top: 100, right: 20, bottom: nil)
         
     }
     func setDataBook(libro : Libro){
@@ -96,7 +101,9 @@ class BooksCollectionViewCell: UICollectionViewCell {
         default:
             imageProduct.image = UIImage(named:"book")
         }
-        nameProduct.text = "\(String(describing: title))"
+        nameProduct.text = "\(String(describing: libro.bookTitle ?? ""))"
+        nameAuthor.text = "\(String(describing: libro.author?.authorName ?? ""))"
+        nameCategory.text = "\(String(describing: libro.categoria?.categoria ?? ""))"
     }
     
     
