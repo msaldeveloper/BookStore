@@ -13,21 +13,40 @@ class BooksViewController: UIViewController {
     var backgroundColor = UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1)
     var dataSource : bookObject?
     var topImageView : UIImageView?
+    var backImage : UIButton?
     
     var booksCollectionView : UICollectionView = { // Ponemos el nombre de la var, su tipo y lo igualamaos a {}()
+        
+        let newlayout = UICollectionViewFlowLayout() // Declaramo un layout el cual nos servirá para definir los atributtos del collectionView
+        newlayout.scrollDirection = .vertical// layout.scrollDirection = .horizontal// Aqui definimos el tipo de scroll que tendrá el collection
+        newlayout.minimumLineSpacing = 20
+        newlayout.minimumInteritemSpacing = 20
+        
+        let newcollection = UICollectionView(frame: .zero, collectionViewLayout: newlayout)
+        newcollection.register(BooksCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        newcollection.isPagingEnabled = true
+        newcollection.translatesAutoresizingMaskIntoConstraints = false
+        newcollection.backgroundColor = .white
+        newcollection.layer.cornerRadius = 10
+        newcollection.showsVerticalScrollIndicator = true
+        newcollection.showsHorizontalScrollIndicator = true
+        return newcollection // Debemos retornar un valor del tipo del cual estamos declarando
+    }()
+    
+    var booksCarruselView : UICollectionView = { // Ponemos el nombre de la var, su tipo y lo igualamaos a {}()
         
         let layout = UICollectionViewFlowLayout() // Declaramo un layout el cual nos servirá para definir los atributtos del collectionView
        // layout.scrollDirection = .horizontal// Aqui definimos el tipo de scroll que tendrá el collection
        
-        layout.scrollDirection = .vertical
+        layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 20
         layout.minimumInteritemSpacing = 20
         
         let collection = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collection.register(BooksCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collection.register(BooksCarruselCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collection.isPagingEnabled = true
         collection.translatesAutoresizingMaskIntoConstraints = false
-        collection.backgroundColor = .white
+        collection.backgroundColor = .clear
         collection.layer.cornerRadius = 10
         collection.showsVerticalScrollIndicator = true
         collection.showsHorizontalScrollIndicator = true
@@ -39,8 +58,18 @@ class BooksViewController: UIViewController {
         view.backgroundColor = backgroundColor
         initUi()
         getData()
+        backImage = UIButton()
+        backImage?.setImage(UIImage(named: "back"), for: .normal)
+        backImage?.addTarget(self, action:#selector(backAction) , for: .touchUpInside)
+        backImage?.tintColor = UIColor.red
+        view.addSubview(backImage!)
+        backImage?.addAnchorsAndSize(width: 30, height: 30, left: 20, top: 55, right: nil, bottom: nil)
 
         // Do any additional setup after loading the view.
+    }
+    @objc func backAction(){
+        print("Back")
+        dismiss(animated: true)
     }
     
     func initUi() {
@@ -57,13 +86,19 @@ class BooksViewController: UIViewController {
         view.addSubview(topImageView!)
         topImageView?.addAnchorsAndSize(width: nil, height: 200, left: 0, top: 0, right: 0, bottom: nil)
         
+        booksCarruselView.delegate = self
+        booksCarruselView.dataSource = self
+        view.addSubview(booksCarruselView)
+        booksCarruselView.addAnchors(left: 10, top: 20, right: 10, bottom: 20, withAnchor: .top, relativeToView: topImageView)
+        
         booksCollectionView.delegate = self
         booksCollectionView.dataSource = self
         view.addSubview(booksCollectionView)
-        booksCollectionView.addAnchorsWithMargin(20)
+        booksCollectionView.addAnchors(left: 10, top: 350, right: 10, bottom: 20, withAnchor: .top, relativeToView: topImageView)
+        //booksCollectionView.addAnchorsWithMargin(20)
         //booksCollectionView.addAnchors(left: 10, top: 50, right: 0, bottom: nil, withAnchor: .top, relativeToView: topImageView)
-        guard let topImageView = self.topImageView else { return }
-        booksCollectionView.topAnchor.constraint(equalTo: topImageView.topAnchor, constant: 500) .isActive = true
+//        guard let topImageView = self.topImageView else { return }
+//        booksCollectionView.topAnchor.constraint(equalTo: topImageView.topAnchor, constant: 50) .isActive = true
     }
     
     func getData() {
@@ -89,47 +124,39 @@ class BooksViewController: UIViewController {
         let elHombreMediocre = Libro(bookTitle: "El Hombre Mediocre", bookPrice: 200, bookPages: 222, bookFormat: "pasta blanda", bookDescription: "La obra trata sobre la naturaleza del hombre, oponiendo dos tipos de personalidades: la del hombre mediocre y la del idealista, analizando las características morales de cada uno, y las formas y papeles que estos tipos de hombres han adoptado en la historia, la sociedad y la cultura.", bookLanguage: "español", bookImage: "hombre mediocre")
         let agujerosNegrosYPequeñosUniversos = Libro(bookTitle: "Agujeros Negros Y Pequeños Universos", bookPrice: 500, bookPages: 217, bookFormat: "ebook", bookDescription: "Agujeros negros y pequeños universos y otros ensayos (Black Holes and Baby Universes and Other Essays título original en inglés) es el libro de Stephen Hawking de 1994 en el que trata sobre algunos aspectos cosmológicos acerca del Universo y que plantea preguntas sobre el mismo.", bookLanguage: "español", bookImage: "agujero negro")
         let popolVuh = Libro(bookTitle: "Popol Vuh", bookPrice: 100, bookPages: 140, bookFormat: "pasta blanda", bookDescription: "las antiguas historias de quiche", bookLanguage: "español", bookImage: "popol vuh")
+        let elViajeDelBeagle = Libro(bookTitle: "El Viaje del Beagle", bookPrice: 300, bookPages: 400, bookFormat: "ebook", bookDescription: "viaje de darwin a bordo de la embarcacion beagle", bookLanguage: "español", bookImage: "beagle")
         
-        //MARK: -CATEGORIAS
-        let Cuentos = Category(categoryName: "Cuentos")
-        let Novela = Category(categoryName: "Novela")
-        let Historia = Category(categoryName: "Historia")
-        let Cientifico = Category(categoryName: "Cientifico")
-        let Fantasia = Category(categoryName: "Fantasia")
-        let Espiritualidad = Category(categoryName: "Espiritualidad")
-        let Filosofia = Category(categoryName: "Filosofia")
-        let Poesia = Category(categoryName: "Poesia")
-        let Suspenso = Category(categoryName: "Suspenso")
-        
-        
+
         //MARK: - AUTORES
-        let tolkien = Author(authorName: "J.R.R Tolkien", authorBooks: [elSeñorDeLosAnillos], authorCategory: [Cuentos, Novela])
-        let federicoNavarrete = Author(authorName: "Federico Navarrete", authorBooks: [historiasMexicas], authorCategory: [Historia, Novela])
-        let charlesDarwin = Author(authorName: "Charles Darwin", authorBooks: [elOrigenDeLasEspecies], authorCategory: [Cientifico])
-        let michaelNewton = Author(authorName: "Michael Newton", authorBooks: [vidaEntreVidas], authorCategory: [Espiritualidad])
-        let osho = Author(authorName: "osho", authorBooks: [elFiloDeLaNavaja], authorCategory: [Espiritualidad])
-        let dianaWynneJones = Author(authorName: "Diana Wynne Jones", authorBooks: [elCastilloAmbulante], authorCategory: [Fantasia,Cuentos])
-        let friedrichNietzsche = Author(authorName: "Friedrich Nietzsche", authorBooks: [elOrigenDeLaTragedia], authorCategory: [Filosofia])
-        let julioVerne = Author(authorName: "Julio Verne", authorBooks: [viajeAlCentroDeLaTierra, laGuerraDeLosMundos], authorCategory: [Fantasia, Cuentos])
-        let jaimeSabines = Author(authorName: "Jaime Sabines", authorBooks: [recuentoDePoemas], authorCategory: [Poesia])
-        let varios  = Author(authorName: "Varios", authorBooks: [mexicoATravezDeSusLeyendas], authorCategory: [Cuentos,Fantasia])
-        let miguelDeCervantes = Author(authorName: "Miguel de Cervantes", authorBooks: [quijote], authorCategory: [Novela])
-        let lewisCarrol = Author(authorName: "Lewis Carrol", authorBooks: [aliciaAtravesDelEspejo], authorCategory: [Cuentos,Novela])
-        let marySelley = Author(authorName: "Mary W. Sheley", authorBooks: [frankenstein], authorCategory: [Cuentos, Novela])
-        let mauricioMaeterlink = Author(authorName: "Mauricio Maeterlink", authorBooks: [laVidaDeLasAbejas], authorCategory: [Cientifico])
-        let juanRulfo = Author(authorName: "Juan Rulfo", authorBooks: [pedroParamo], authorCategory: [Novela, Cuentos])
-        let antoineDeSaintExupery = Author(authorName: "Antoine De Saint Exupery", authorBooks: [principito], authorCategory: [Novela, Cuentos])
-        let edgarAlanPoe = Author(authorName: "Edgar Alan Poe", authorBooks: [elCuervo], authorCategory: [Suspenso,Novela,Cuentos])
-        let joseIngenieros = Author(authorName: "Jose Ingenieros", authorBooks: [elHombreMediocre], authorCategory: [Filosofia])
-        let stephenHawking = Author(authorName: "Stephen Hawking", authorBooks: [agujerosNegrosYPequeñosUniversos], authorCategory: [Cientifico,Novela])
-        let franciscoXimenez = Author(authorName: "Francisco Ximenez", authorBooks: [popolVuh], authorCategory: [Historia])
         
+        let tolkien = Author(authorName: "J.R.R Tolkien", authorBooks: [elSeñorDeLosAnillos], categoryName: "Novela")
+        let federicoNavarrete = Author(authorName: "Federico Navarrete", authorBooks: [historiasMexicas], categoryName: "Historia")
+        let charlesDarwin = Author(authorName: "Charles Darwin", authorBooks: [elOrigenDeLasEspecies,elViajeDelBeagle], categoryName: "Cientifico")
+        let michaelNewton = Author(authorName: "Michael Newton", authorBooks: [vidaEntreVidas], categoryName: "Espiritualidad")
+        let osho = Author(authorName: "osho", authorBooks: [elFiloDeLaNavaja], categoryName: "Espiritualidad")
+    
+        let dianaWynneJones = Author(authorName: "Diana Wynne Jones", authorBooks: [elCastilloAmbulante], categoryName: "Fantasia")
+        let friedrichNietzsche = Author(authorName: "Friedrich Nietzsche", authorBooks: [elOrigenDeLaTragedia], categoryName: "Filosofia")
+        let julioVerne = Author(authorName: "Julio Verne", authorBooks: [viajeAlCentroDeLaTierra,laGuerraDeLosMundos], categoryName: "Fantasia")
+        let jaimeSabines = Author(authorName: "Jaime Sabines", authorBooks:  [recuentoDePoemas], categoryName: "Poesia")
+        let varios  = Author(authorName: "Varos", authorBooks: [mexicoATravezDeSusLeyendas], categoryName: "Fantasia")
+        let miguelDeCervantes = Author(authorName: "Miguel de Cervantes", authorBooks: [quijote], categoryName: "Novela")
+        let lewisCarrol = Author(authorName: "Lewis Carrol", authorBooks: [aliciaAtravesDelEspejo], categoryName: "Novela")
+        let marySelley = Author(authorName: "Mary W. Sheley", authorBooks: [frankenstein], categoryName: "Novela")
+        let mauricioMaeterlink = Author(authorName: "Mauricio Maeterlink", authorBooks: [laVidaDeLasAbejas], categoryName: "Cientifico")
+        let juanRulfo = Author(authorName: "Juan Rulfo", authorBooks: [pedroParamo], categoryName: "Novela")
+        let antoineDeSaintExupery = Author(authorName: "Antoine De Saint Exupery", authorBooks: [principito], categoryName: "Novela")
+        let edgarAlanPoe = Author(authorName: "Edgar Alan Poe", authorBooks: [elCuervo], categoryName: "Novela")
+        let joseIngenieros = Author(authorName: "Jose Ingenieros", authorBooks: [elHombreMediocre], categoryName: "Filosofia")
+        let stephenHawking = Author(authorName: "Stephen Hawking", authorBooks: [agujerosNegrosYPequeñosUniversos], categoryName: "Cientifico")
+        let franciscoXimenez = Author(authorName: "Francisco Ximenez", authorBooks: [popolVuh], categoryName: "Historia")
         // MARK: _ BOOKOBJECT
-        let books = bookObject(authorName: [tolkien,federicoNavarrete,charlesDarwin,michaelNewton,osho,dianaWynneJones,friedrichNietzsche,julioVerne,jaimeSabines,miguelDeCervantes,varios,lewisCarrol,marySelley,mauricioMaeterlink,juanRulfo,antoineDeSaintExupery,edgarAlanPoe,joseIngenieros,stephenHawking,franciscoXimenez], categoryName: [Cuentos,Novela,Historia,Cientifico,Fantasia,Espiritualidad,Filosofia,Poesia,Suspenso])
+        let books = bookObject(authorName: [tolkien,federicoNavarrete,charlesDarwin,michaelNewton,osho,dianaWynneJones,friedrichNietzsche,julioVerne,jaimeSabines,miguelDeCervantes,varios,lewisCarrol,marySelley,mauricioMaeterlink,juanRulfo,antoineDeSaintExupery,edgarAlanPoe,joseIngenieros,stephenHawking,franciscoXimenez])
         
         dataSource = books
         
         booksCollectionView.reloadData()
+        booksCarruselView.reloadData()
     }
     
 }
@@ -139,7 +166,7 @@ extension BooksViewController : UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return dataSource?.categoryName?.count ?? 0
+        return dataSource?.authorName?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

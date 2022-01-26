@@ -10,7 +10,7 @@ import UIKit
 class BooksCollectionViewCell: UICollectionViewCell {
     var imageProduct : UIImageView = {
         let image = UIImageView()
-        image.backgroundColor = .orange
+        image.backgroundColor = .clear
         image.contentMode = .scaleAspectFit
         image.image = UIImage(named: "forward")
         return image
@@ -23,7 +23,7 @@ class BooksCollectionViewCell: UICollectionViewCell {
         label.textAlignment = .left
         label.adjustsFontSizeToFitWidth = true
         label.textColor = .black
-        label.backgroundColor = .magenta
+        label.backgroundColor = .clear
         label.font = .boldSystemFont(ofSize: 20)
         return label
     }()
@@ -56,6 +56,7 @@ class BooksCollectionViewCell: UICollectionViewCell {
         let color = UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1)
         self.backgroundColor = color
         
+        imageProduct.backgroundColor = .clear
         self.addSubview(imageProduct)
         imageProduct.addAnchorsAndSize(width: 120, height: 180, left: 10, top: 10, right: nil, bottom: nil)
         
@@ -74,17 +75,30 @@ class BooksCollectionViewCell: UICollectionViewCell {
     }
     func setDataBook(libro : Libro){
         let  title = NSString(string: libro.bookTitle ?? "")
-        imageProduct.image = UIImage(named: libro.bookImage ??  "book")
+        //imageProduct.image = UIImage(named: libro.bookImage ??  "book")
+        let image = NSString(string: libro.bookImage ?? "")
+        print (image)
+        switch image {
+        case "el señor de los anillos":
+            imageProduct.image = UIImage(named:"lordOf")
+        case "historias mexicas":
+            imageProduct.image = UIImage(named:"mexicas")
+        case "el origen de las especies":
+            imageProduct.image = UIImage(named:"especies")
+        case "vidaEntreVidas":
+            imageProduct.image = UIImage(named:"vidaEntreVidas")
+        case "el filo de la navaja":
+            imageProduct.image = UIImage(named:"navaja")
+        case "el castillo ambulante":
+            imageProduct.image = UIImage(named:"castillo")
+        case "el origen de la trajedia":
+            imageProduct.image = UIImage(named:"trajedia")
+        default:
+            imageProduct.image = UIImage(named:"book")
+        }
         nameProduct.text = "\(String(describing: title))"
     }
     
-    func setDataAuthor(autor : Author){
-        nameAuthor.text = "\(autor.authorName)"
-    }
-    
-    func setDataCategory(category : Category){
-        nameCategory.text = "\(String(describing: category.categoryName))"
-    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

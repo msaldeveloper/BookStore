@@ -8,34 +8,25 @@
 import Foundation
 import UIKit
 class bookObject{
-    var categoryName : [Category]?
     var authorName : [Author]?
-    init(authorName : [Author],categoryName : [Category]){
+    
+    init(authorName : [Author]){
         self.authorName = authorName
-        self.categoryName = categoryName
     }
 }
 
 class Author {
     var authorName : String?
     var authorBooks : [Libro]?
-    var authorCategory : [Category]?
+    var categoryName : String?
     
-    init(authorName : String, authorBooks : [Libro], authorCategory : [Category]){
+    init(authorName : String, authorBooks : [Libro], categoryName : String?){
         self.authorName = authorName
         self.authorBooks = authorBooks
-        self.authorCategory = authorCategory
+        self.categoryName = categoryName
     }
 }
 
-class Category {
-    var categoryName : String?
-    
-    init(categoryName : String){
-        self.categoryName = categoryName
-        
-    }
-}
 
 class Libro {
     var bookTitle : String?
@@ -45,6 +36,8 @@ class Libro {
     var bookDescription : String?
     var bookLanguage : String?
     var bookImage : String?
+    var author : Author?
+    var categoria : Category?
     
     init(bookTitle : String, bookPrice : Float, bookPages : Int, bookFormat : String,
          bookDescription : String, bookLanguage :String, bookImage : String?){

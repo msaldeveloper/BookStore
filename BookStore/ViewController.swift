@@ -150,13 +150,13 @@ class ViewController: UIViewController {
     @objc func buttonAction() {
         print("button press")
         let BooksViewController = BooksViewController()
+        BooksViewController.modalPresentationStyle = .fullScreen
         present(BooksViewController,animated: true,completion:{print("register button press")} )
         //navigationController?.pushViewController(BooksViewController, animated: true)
     }
     
     @objc func registerButton() {
         let LoginViewController = LoginViewController()
-        
         present(LoginViewController,animated: true,completion:{print("register button press")} )
     }
     
