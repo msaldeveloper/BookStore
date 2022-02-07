@@ -149,20 +149,32 @@ class ViewController: UIViewController {
     }
     @objc func buttonAction() {
         print("button press")
-        print (emailText?.text)
-        if (emailText?.text != nil || emailText?.text != "") {
-            let BooksViewController = BooksViewController()
-            BooksViewController.modalPresentationStyle = .fullScreen
-            present(BooksViewController,animated: true,completion:{print("register button press")} )
-        }else if (passwordText?.text) != nil{
-            let BooksViewController = BooksViewController()
-            BooksViewController.modalPresentationStyle = .fullScreen
-            present(BooksViewController,animated: true,completion:{print("register button press")} )
-        }else {
+        //print ("@@@@@", emailText?.text)
+        print ("@@@@@", type(of: emailText?.text))
+        if emailText?.text == Optional("") {
+            print ("TRUE")
+        }
+        
+        if (emailText?.text == Optional("") && passwordText == nil ||  emailText?.text != "msalda53@gmail.com" && passwordText?.text != "1234") {
             let alert = UIAlertController(title: "Error en datos", message: "Ingresa Un Correo Electronico Y una Contraseña.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
+            
+        }else if emailText?.text == Optional(""){
+            let alert = UIAlertController(title: "Error en datos", message: "Ingresa Un Correo Electronico Y una Contraseña.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }else if (passwordText?.text) == nil{
+            let alert = UIAlertController(title: "Error en datos", message: "Ingresa Un Correo Electronico Y una Contraseña.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }else {
+            let BooksViewController = BooksViewController()
+            BooksViewController.modalPresentationStyle = .fullScreen
+            present(BooksViewController,animated: true,completion:{print("register button press validated")} )
         }
+        
+            
         
         //navigationController?.pushViewController(BooksViewController, animated: true)
     }

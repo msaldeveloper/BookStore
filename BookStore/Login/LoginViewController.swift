@@ -220,7 +220,24 @@ class LoginViewController: UIViewController {
     }
     
     @objc func buttonAction() {
-        print("button press")
+        print("create account press press")
+        if passwordText?.text == confirmText?.text && userText?.text != "" && emailText?.text != "" && passwordText?.text != "" && confirmText?.text != ""{
+            let BooksViewController = BooksViewController()
+            BooksViewController.modalPresentationStyle = .fullScreen
+            present(BooksViewController,animated: true,completion:{print("register button press validated")} )
+        }else if passwordText?.text != confirmText?.text {
+            let alert = UIAlertController(title: "Error en datos", message: "las contraseñas son diferentes", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }else if userText?.text == "" && emailText?.text == ""{
+            let alert = UIAlertController(title: "Error en datos", message: "Porfavor Completa el Registro", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }else if passwordText?.text == "" && confirmText?.text == ""{
+            let alert = UIAlertController(title: "Error en datos", message: "Porfavor Completa el Registro", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
     }
         
 
