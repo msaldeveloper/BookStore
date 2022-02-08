@@ -18,7 +18,11 @@ struct BookManager {
     var delegate: BookManagerDelegate?
     
     func fetchBook(bookName: String) {
-        let urlString = "\(BookUrl)q=\(bookName)"
+        print("@@@@@@@@",bookName)
+        let lowerBookName = bookName.lowercased()
+        let replaceBookName = lowerBookName.replacingOccurrences(of: " ", with: "_")
+        print("@@@@@@@@",replaceBookName)
+        let urlString = "\(BookUrl)q=\(replaceBookName)"
        perfomRequest(urlString: urlString)
     }
     

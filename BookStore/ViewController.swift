@@ -155,7 +155,7 @@ class ViewController: UIViewController {
             print ("TRUE")
         }
         
-        if (emailText?.text == Optional("") && passwordText == nil ||  emailText?.text != "msalda53@gmail.com" && passwordText?.text != "1234") {
+        if (emailText?.text == Optional("") && passwordText == nil ||  emailText?.text != "Msalda53" && passwordText?.text != "1234") {
             let alert = UIAlertController(title: "Error en datos", message: "Ingresa Un Correo Electronico Y una Contraseña.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
@@ -180,8 +180,8 @@ class ViewController: UIViewController {
     }
     
     @objc func registerButton() {
-        let LoginViewController = LoginViewController()
-        present(LoginViewController,animated: true,completion:{print("register button press")} )
+        let RegisterViewController = RegisterViewController()
+        present(RegisterViewController,animated: true,completion:{print("register button press")} )
     }
     
     @objc func dismissKeyboard() {

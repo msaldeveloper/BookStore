@@ -1,5 +1,5 @@
 //
-//  LoginViewController.swift
+//  RegisterViewController.swift
 //  BookStore
 //
 //  Created by Mario Saldana on 21/01/22.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class RegisterViewController: UIViewController {
     var topImageView : UIImageView?
     var backImage : UIButton?
     var infoText : UITextView?
