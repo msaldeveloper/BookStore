@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
 
 class BooksViewController: UIViewController , BookManagerDelegate{
     
@@ -15,11 +17,11 @@ class BooksViewController: UIViewController , BookManagerDelegate{
     var backgroundColor = UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1)
     var dataSource : bookObject?
     var topImageView : UIImageView?
-    
+    var dBRef : DatabaseReference?
     var seachInput : UITextField?
     var searchBook: UIView?
     var searchButton: UIButton?
-    
+    var userName : UILabel?
     var backImage : UIButton?
     var bookManager = BookManager()
     
@@ -46,6 +48,7 @@ class BooksViewController: UIViewController , BookManagerDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dBRef = Database.database().reference()
         bookManager.delegate = self
         view.backgroundColor = backgroundColor
         initUi()
@@ -58,7 +61,6 @@ class BooksViewController: UIViewController , BookManagerDelegate{
         backImage?.tintColor = UIColor.red
         view.addSubview(backImage!)
         backImage?.addAnchorsAndSize(width: 30, height: 30, left: 20, top: 55, right: nil, bottom: nil)
-
         
     }
     @objc func backAction(){
@@ -80,6 +82,24 @@ class BooksViewController: UIViewController , BookManagerDelegate{
         view.addSubview(topImageView!)
         topImageView?.addAnchorsAndSize(width: nil, height: 200, left: 0, top: 0, right: 0, bottom: nil)
         
+        userName = UILabel()
+        userName?.font = .boldSystemFont(ofSize: 40)
+        userName?.textColor = UIColor(cgColor: CGColor(red: 0, green: 0, blue: 153/255, alpha: 1))
+        userName?.layer.shadowColor = UIColor.white.cgColor
+        userName?.layer.shadowRadius = 5.0
+        userName?.layer.shadowOpacity = 1.0
+        userName?.layer.shadowOffset = CGSize(width: -4, height: 4)
+        userName?.layer.masksToBounds = false
+        let userId = (Auth.auth().currentUser?.uid)!
+        dBRef?.child("users").child(userId).observeSingleEvent(of: .value, with: { [self] (snatshop) in
+            let value = snatshop.value as? NSDictionary
+            
+            userName?.text = "Hola \(value!["nombre"] ?? "")!"
+            print(value!["nombre"] ?? "")
+        })
+        topImageView?.addSubview(userName!)
+        userName?.addAnchorsAndSize(width: nil, height: 50, left: nil, top: 50, right: 30, bottom: nil)
+                
         
         
         booksCollectionView.delegate = self

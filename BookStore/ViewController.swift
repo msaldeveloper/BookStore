@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import FirebaseDatabase
+import FirebaseAuth
 
 class ViewController: UIViewController {
     var confirmButton : UIButton?
@@ -14,20 +16,42 @@ class ViewController: UIViewController {
     var emailText : UITextField?
     var passwordTextField : UIView?
     var passwordText : UITextField?
-    var welcomeText : UITextView?
+    var welcomeText : UILabel?
     var topImageView : UIImageView?
     var logo : UIImageView?
     var width = UIScreen.main.bounds.width
     var height = UIScreen.main.bounds.height
     var backgroundColor = UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1)
     let shadow = UIColor.black.withAlphaComponent(1).cgColor
+    var tabBar : UITabBarController?
+    var ojitoButton : UIButton?
+    
+    //self.passwordText?.text = keyChain["password"]
+        
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = backgroundColor
         initUI()
         // Do any additional setup after loading the view.
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIInputViewController.dismissKeyboard))
+
+        
+       view.addGestureRecognizer(tap)
     }
+    
+    
+    override func viewDidAppear(_ animated: Bool) {
+        
+        emailText?.text = ""
+        passwordText?.text = ""
+        
+        super.viewDidAppear(animated)
+        
+        sesionActiva()
+        
+    }
+
     func initUI(){
         login()
         
@@ -55,7 +79,7 @@ class ViewController: UIViewController {
         logo?.addAnchorsAndSize(width: 100, height: 100, left: 20, top: 150, right: 20, bottom: nil)
         
         // MARK: - WELCOME TEXT
-        welcomeText = UITextView()
+        welcomeText = UILabel()
         welcomeText?.backgroundColor = .clear
         welcomeText?.text = "¡Bienvenido!"
         welcomeText?.textAlignment = .center
@@ -87,6 +111,7 @@ class ViewController: UIViewController {
         emailText?.font = .systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
         emailText?.textColor = .black
         emailText?.keyboardType = .emailAddress
+        emailText?.autocapitalizationType = .none
         emailTextField?.addSubview(emailText!)
         emailText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 10, bottom: 10)
         
@@ -113,7 +138,13 @@ class ViewController: UIViewController {
         passwordText?.textColor = .black
         passwordText?.isSecureTextEntry = true
         passwordTextField?.addSubview(passwordText!)
-        passwordText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 10, bottom: 10)
+        passwordText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 50, bottom: 10)
+        
+        ojitoButton = UIButton()
+        ojitoButton?.addTarget(self, action: #selector(verPass), for: .touchUpInside)
+        ojitoButton?.setImage(UIImage(named: "eye"), for: .normal)
+        passwordTextField?.addSubview(ojitoButton!)
+        ojitoButton?.addAnchorsAndSize(width: 30, height: 30, left: nil, top: 20, right: 10, bottom: nil)
         
         // MARK: - BUTTON
         confirmButton = UIButton()
@@ -147,47 +178,116 @@ class ViewController: UIViewController {
 
         
     }
-    @objc func buttonAction() {
-        print("button press")
-        //print ("@@@@@", emailText?.text)
-        print ("@@@@@", type(of: emailText?.text))
-        if emailText?.text == Optional("") {
-            print ("TRUE")
-        }
-        
-        if (emailText?.text == Optional("") && passwordText == nil ||  emailText?.text != "Msalda53" && passwordText?.text != "1234") {
-            let alert = UIAlertController(title: "Error en datos", message: "Ingresa Un Correo Electronico Y una Contraseña.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-            
-        }else if emailText?.text == Optional(""){
-            let alert = UIAlertController(title: "Error en datos", message: "Ingresa Un Correo Electronico Y una Contraseña.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }else if (passwordText?.text) == nil{
-            let alert = UIAlertController(title: "Error en datos", message: "Ingresa Un Correo Electronico Y una Contraseña.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }else {
-            let BooksViewController = BooksViewController()
-            BooksViewController.modalPresentationStyle = .fullScreen
-            present(BooksViewController,animated: true,completion:{print("register button press validated")} )
-        }
-        
-            
-        
-        //navigationController?.pushViewController(BooksViewController, animated: true)
+    @objc func verPass(){
+        passwordText?.isSecureTextEntry.toggle()
     }
     
-    @objc func registerButton() {
-        let RegisterViewController = RegisterViewController()
-        present(RegisterViewController,animated: true,completion:{print("register button press")} )
+        @objc func buttonAction() {
+            
+            if let mail = emailText?.text {
+                if let contrasena = passwordText?.text{
+                    iniciarSesion(correo: mail, pass: contrasena)
+                }
+            }
+        }
+    
+    func iniciarSesion(correo: String, pass: String){
+        Auth.auth().signIn(withEmail: correo, password: pass) { [self] user, error in
+            if user != nil{
+                ("Logueo viewcontroller2")
+                let  tabBarVC = UITabBarController()
+                let home = BooksViewController()
+                let search = SearcherViewController()
+                let logOut = ViewController()
+                home.title = "Home"
+                search.title = "Search"
+                logOut.title = "LogOut"
+                UITabBar.appearance().tintColor = .black
+                UITabBar.appearance().isTranslucent = true
+                UITabBar.appearance().backgroundColor = UIColor.gray
+                home.tabBarItem.image = UIImage(named: "casa25")
+                search.tabBarItem.image = UIImage(named: "search25")
+                logOut.tabBarItem.image = UIImage(named: "logout25")
+
+                                //UITabBar.appearance().backgroundImage = UIImage(named: "logo")
+                
+                
+                
+                
+                tabBarVC.setViewControllers([home,search,logOut], animated: false)
+                tabBarVC.modalPresentationStyle = .fullScreen
+                present(tabBarVC, animated: true, completion: nil)
+                
+            }else{
+                if let error = error?.localizedDescription{
+                    print("Error en Firebase:", error)
+                    let alert = UIAlertController(title: "Error :(", message: error, preferredStyle: .alert)
+                    let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                    alert.addAction(aceptar)
+                    present(alert, animated: true, completion: nil)
+                }else{
+                    let alert = UIAlertController(title: "Error :(", message: "Error en el código fuente", preferredStyle: .alert)
+                    let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                    alert.addAction(aceptar)
+                    present(alert, animated: true, completion: nil)
+                }
+            }
+        }
+        
     }
     
-    @objc func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        view.endEditing(true)
+        @objc func registerButton() {
+            let RegisterViewController = RegisterViewController()
+            present(RegisterViewController,animated: true,completion:{print("register button press")} )
+        }
+    
+        @objc func dismissKeyboard() {
+            //Causes the view (or one of its embedded text fields) to resign the first responder status.
+            view.endEditing(true)
+        }
+    
+    func sesionActiva(){
+        Auth.auth().addStateDidChangeListener { [self] user, error in
+            if error == nil{
+                print("No estamos logueados")
+                
+            }else{
+                print("Estamos logueados")
+
+                let  tabBarVC = UITabBarController()
+                let home = BooksViewController()
+                let search = SearcherViewController()
+                //let logOut = ViewController()
+                home.title = "Home"
+                search.title = "Search"
+                //logOut.title = "LogOut"
+                UITabBar.appearance().tintColor = .black
+                UITabBar.appearance().isTranslucent = true
+                UITabBar.appearance().backgroundColor = UIColor.gray
+                home.tabBarItem.image = UIImage(named: "casa25")
+                search.tabBarItem.image = UIImage(named: "search25")
+                //logOut.tabBarItem.image = UIImage(named: "logout25")
+
+                
+                tabBarVC.setViewControllers([home,search], animated: false)
+                tabBarVC.modalPresentationStyle = .fullScreen
+                present(tabBarVC, animated: true, completion: nil)
+                
+                
+                
+                
+                
+                
+            }
+        }
     }
 
+}
+
+extension UITabBar {
+    static func setAppearanceTabbar(){
+        UITabBar.appearance().backgroundColor = .red
+    }
+     
 }
 

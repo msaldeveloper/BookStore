@@ -6,14 +6,18 @@
 //
 
 import UIKit
+import FirebaseAuth
+import FirebaseDatabase
 
 class RegisterViewController: UIViewController {
     var topImageView : UIImageView?
     var backImage : UIButton?
     var infoText : UITextView?
+    var ref: DatabaseReference?
+    var alerta = ""
     
     var registerField : UIView?
-    var registerTitle : UITextView?
+    var registerTitle : UILabel?
     var userTextField : UIView?
     var userText : UITextField?
     var emailTextField : UIView?
@@ -26,9 +30,12 @@ class RegisterViewController: UIViewController {
     var width = UIScreen.main.bounds.width
     var height = UIScreen.main.bounds.height
     var backgroundColor = UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1)
+    var ojitoButton : UIButton?
+    var ojitoButtonConfirm : UIButton?
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        ref = Database.database().reference()
         view.backgroundColor = backgroundColor
         // Do any additional setup after loading the view.
         initUi()
@@ -101,13 +108,13 @@ class RegisterViewController: UIViewController {
         view.addSubview(registerField!)
         registerField?.addAnchorsAndSize(width: nil, height: height/2, left: 25, top: 15, right: 25, bottom: nil, withAnchor: .top, relativeToView: infoText)
         
-        registerTitle = UITextView()
+        registerTitle = UILabel()
         registerTitle?.backgroundColor = .clear
         registerTitle?.text = "Registra tu información"
         registerTitle?.font = .systemFont(ofSize: 25, weight: UIFont.Weight.semibold)
         registerTitle?.textColor = UIColor(red: 0, green: 0, blue: 153/255, alpha: 1)
         registerField?.addSubview(registerTitle!)
-        registerTitle?.addAnchorsAndSize(width: nil, height: 40, left: 50, top: 20, right: 50, bottom: nil)
+        registerTitle?.addAnchorsAndSize(width: nil, height: 40, left: 30, top: 50, right: 20, bottom: nil)
         
         
         userTextField = UIView()
@@ -118,7 +125,7 @@ class RegisterViewController: UIViewController {
         //emailTextField?.layer.borderColor = UIColor(red: 0, green: 0, blue: 153/255, alpha: 1).cgColor//cambio color
         userTextField?.layer.borderWidth = 1
         registerField?.addSubview(userTextField!)
-        userTextField?.addAnchorsAndSize(width: width - 40, height: 50, left: 10, top: 70, right: 10, bottom: nil, withAnchor: .top, relativeToView: registerTitle)
+        userTextField?.addAnchorsAndSize(width: width - 40, height: 50, left: 10, top: 40, right: 10, bottom: nil, withAnchor: .top, relativeToView: registerTitle)
         
         userText = UITextField()
         userText?.backgroundColor = .clear
@@ -128,7 +135,7 @@ class RegisterViewController: UIViewController {
         )
         userText?.font = .systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
         userText?.textColor = .black
-        userText?.keyboardType = .emailAddress
+        userText?.autocapitalizationType = .none
         userTextField?.addSubview(userText!)
         userText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 10, bottom: 10)
         
@@ -178,7 +185,13 @@ class RegisterViewController: UIViewController {
         passwordText?.textColor = .black
         passwordText?.isSecureTextEntry = true
         passwordTextField?.addSubview(passwordText!)
-        passwordText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 10, bottom: 10)
+        passwordText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 50, bottom: 10)
+        
+        ojitoButton = UIButton()
+        ojitoButton?.addTarget(self, action: #selector(verPass), for: .touchUpInside)
+        ojitoButton?.setImage(UIImage(named: "eye"), for: .normal)
+        passwordTextField?.addSubview(ojitoButton!)
+        ojitoButton?.addAnchorsAndSize(width: 30, height: 30, left: nil, top: 10, right: 10, bottom: nil)
         
         
         confirmTextField = UIView()
@@ -202,7 +215,13 @@ class RegisterViewController: UIViewController {
         confirmText?.textColor = .black
         confirmText?.isSecureTextEntry = true
         confirmTextField?.addSubview(confirmText!)
-        confirmText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 10, bottom: 10)
+        confirmText?.addAnchorsAndSize(width: width - 40, height: 30, left: 10, top: 12, right: 50, bottom: 10)
+        
+        ojitoButtonConfirm = UIButton()
+        ojitoButtonConfirm?.addTarget(self, action: #selector(verPassConfirm), for: .touchUpInside)
+        ojitoButtonConfirm?.setImage(UIImage(named: "eye"), for: .normal)
+        confirmTextField?.addSubview(ojitoButtonConfirm!)
+        ojitoButtonConfirm?.addAnchorsAndSize(width: 30, height: 30, left: nil, top: 10, right: 10, bottom: nil)
         
         
     }
@@ -214,31 +233,142 @@ class RegisterViewController: UIViewController {
         confirmButton?.layer.cornerRadius = 15
         confirmButton?.addTarget(self, action: #selector(buttonAction), for: .touchUpInside)
         view.addSubview(confirmButton!)
-        confirmButton?.addAnchorsAndSize(width: width - 40, height: 50, left: 25, top: height/10, right: 25, bottom: nil, withAnchor: .top, relativeToView: registerField)
+        confirmButton?.addAnchorsAndSize(width: width - 40, height: 50, left: 25, top: height/15, right: 25, bottom: nil, withAnchor: .top, relativeToView: registerField)
         let tapLoginButton = UITapGestureRecognizer(target: self, action: #selector(buttonAction))
         confirmButton?.addGestureRecognizer(tapLoginButton)
     }
+    @objc func verPass(){
+        passwordText?.isSecureTextEntry.toggle()
+    }
+    @objc func verPassConfirm(){
+        confirmText?.isSecureTextEntry.toggle()
+    }
     
-    @objc func buttonAction() {
-        print("create account press press")
-        if passwordText?.text == confirmText?.text && userText?.text != "" && emailText?.text != "" && passwordText?.text != "" && confirmText?.text != ""{
-            let BooksViewController = BooksViewController()
-            BooksViewController.modalPresentationStyle = .fullScreen
-            present(BooksViewController,animated: true,completion:{print("register button press validated")} )
-        }else if passwordText?.text != confirmText?.text {
-            let alert = UIAlertController(title: "Error en datos", message: "las contraseñas son diferentes", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }else if userText?.text == "" && emailText?.text == ""{
-            let alert = UIAlertController(title: "Error en datos", message: "Porfavor Completa el Registro", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
-        }else if passwordText?.text == "" && confirmText?.text == ""{
-            let alert = UIAlertController(title: "Error en datos", message: "Porfavor Completa el Registro", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+    
+    @objc func buttonAction(){
+        var seguridadMinuscula = false
+        var seguridadMayuscula = false
+        var seguridadNumero = false
+        var seguridadEspecial = false
+        var seguridadCount = false
+        
+        print("Registro")
+        if let nombre = userText?.text{
+            if nombre != ""{
+                if let mail = emailText?.text {
+                    if let contrasena = passwordText?.text{
+                        if let contrasenaConfirmada = confirmText?.text{
+                            for i in contrasena{
+                                switch i{
+                                    case "a","b","c","d","e","f","g","h","i","j","k","l","m","n","ñ","o","p","q","r","s","t","u","v","w","x","y","z":
+                                    seguridadMinuscula = true
+                                    case "A","B","C","D","E","F","G","H","I","J","K","L","M","N","Ñ","O","P","Q","R","S","T","U","V","W","X","Y","Z":
+                                    seguridadMayuscula = true
+                                    case "1","2","3","4","5","6","7","8","9","0":
+                                    seguridadNumero = true
+                                    default:
+                                    seguridadEspecial = true
+                                }
+                            }
+                            if contrasena.count >= 8{
+                                seguridadCount = true
+                            }
+                            if seguridadMinuscula && seguridadMayuscula && seguridadNumero && seguridadEspecial && seguridadCount{
+                                if contrasena == contrasenaConfirmada{
+                                        registroTerminado(nombre: nombre, correo: mail, pass: contrasena)
+                                }else{
+                                    alerta = "Las contraseñas no coinciden"
+                                    let alert = UIAlertController(title: "Error :(", message: alerta, preferredStyle: .alert)
+                                    let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                                    alert.addAction(aceptar)
+                                    self.present(alert, animated: true, completion: nil)
+                                }
+                            }else{
+                                alerta = "La contraseña debe contener al menos 8 carácteres entre los cuales debe haber al menos una minúscula, una mayúscula, un número y un carácter especial"
+                                let alert = UIAlertController(title: "Error :(", message: alerta, preferredStyle: .alert)
+                                let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                                alert.addAction(aceptar)
+                                self.present(alert, animated: true, completion: nil)
+                            }
+                        }else{
+                            alerta = "Introduce la confirmación de la contraseña"
+                            let alert = UIAlertController(title: "Error :(", message: alerta, preferredStyle: .alert)
+                            let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                            alert.addAction(aceptar)
+                            self.present(alert, animated: true, completion: nil)
+                        }
+                    }else{
+                        alerta = "La contraseña no está introducida"
+                        let alert = UIAlertController(title: "Error :(", message: alerta, preferredStyle: .alert)
+                        let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                        alert.addAction(aceptar)
+                        self.present(alert, animated: true, completion: nil)
+                    }
+                }else{
+                    alerta = "El correo no está introducido"
+                    let alert = UIAlertController(title: "Error :(", message: alerta, preferredStyle: .alert)
+                    let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                    alert.addAction(aceptar)
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }else{
+                alerta = "El nombre de usuario no está introducido"
+                let alert = UIAlertController(title: "Error :(", message: alerta, preferredStyle: .alert)
+                let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                alert.addAction(aceptar)
+                self.present(alert, animated: true, completion: nil)
+            }
         }
     }
+    
+    func registroTerminado(nombre: String, correo: String, pass: String){
+        Auth.auth().createUser(withEmail: correo, password: pass) { [self] user, error in
+            if user != nil{
+                print("Usuario creado")
+                let campos = ["nombre": userText?.text, "email": self.emailText?.text, "id": Auth.auth().currentUser?.uid]
+                ref?.child("users").child(Auth.auth().currentUser!.uid).setValue(campos)
+                let BooksViewController = BooksViewController()
+                BooksViewController.modalPresentationStyle = .fullScreen
+                present(BooksViewController,animated: true,completion:{print("register button press validated")} )
+                
+                //self.dismiss(animated: true, completion: nil)
+            }else{
+                if let error = error?.localizedDescription{
+                    print("Error en Firebase:", error)
+                    let alert = UIAlertController(title: "Error :(", message: error, preferredStyle: .alert)
+                    let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                    alert.addAction(aceptar)
+                    self.present(alert, animated: true, completion: nil)
+                }else{
+                    let alert = UIAlertController(title: "Error :(", message: "Error en el código fuente", preferredStyle: .alert)
+                    let aceptar = UIAlertAction(title: "Aceptar", style: .default, handler: nil)
+                    alert.addAction(aceptar)
+                    self.present(alert, animated: true, completion: nil)
+                }
+            }
+        }
+        
+    }
+//    @objc func buttonAction() {
+//        print("create account press press")
+//        if passwordText?.text == confirmText?.text && userText?.text != "" && emailText?.text != "" && passwordText?.text != "" && confirmText?.text != ""{
+//            let BooksViewController = BooksViewController()
+//            BooksViewController.modalPresentationStyle = .fullScreen
+//            present(BooksViewController,animated: true,completion:{print("register button press validated")} )
+//        }else if passwordText?.text != confirmText?.text {
+//            let alert = UIAlertController(title: "Error en datos", message: "las contraseñas son diferentes", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//            self.present(alert, animated: true, completion: nil)
+//        }else if userText?.text == "" && emailText?.text == ""{
+//            let alert = UIAlertController(title: "Error en datos", message: "Porfavor Completa el Registro", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//            self.present(alert, animated: true, completion: nil)
+//        }else if passwordText?.text == "" && confirmText?.text == ""{
+//            let alert = UIAlertController(title: "Error en datos", message: "Porfavor Completa el Registro", preferredStyle: .alert)
+//            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+//            self.present(alert, animated: true, completion: nil)
+//        }
+//    }
         
 
     /*
