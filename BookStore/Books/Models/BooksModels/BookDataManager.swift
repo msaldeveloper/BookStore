@@ -18,12 +18,16 @@ struct BookManager {
     var delegate: BookManagerDelegate?
     
     func fetchBook(bookName: String) {
-        print("@@@@@@@@",bookName)
-        let lowerBookName = bookName.lowercased()
-        let replaceBookName = lowerBookName.replacingOccurrences(of: " ", with: "_")
-        print("@@@@@@@@",replaceBookName)
-        let urlString = "\(BookUrl)q=\(replaceBookName)"
-       perfomRequest(urlString: urlString)
+        print(bookName)
+        
+        if bookName != "" {
+            let lowerBookName = bookName.lowercased()
+            let replaceBookName = lowerBookName.replacingOccurrences(of: " ", with: "_")
+            print("@@@@@@@@",replaceBookName)
+            let urlString = "\(BookUrl)q=\(replaceBookName)"
+           perfomRequest(urlString: urlString)
+        }
+        
     }
     
     func perfomRequest(urlString: String) {
@@ -70,6 +74,7 @@ struct BookManager {
             let authorNameApi = decodedData.docs[0].author_name?[0]
             let authorKeyNameApi = decodedData.docs[0].author_key?[0]
             let bookid = BookModel(title: title1Api, first: firstApi, key: keyApi, author_name: authorNameApi, edition: EditionIdApi, author_key: authorKeyNameApi)
+            
             return bookid
             
         } catch {

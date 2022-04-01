@@ -18,9 +18,15 @@ struct DetailManager {
    var delegate: DetailManagerDelegate?
    
    func fetchDetail(bookName: String) {
+       print(bookName)
        
-       let urlString = "\(BookUrl)/\(bookName).json"
-      perfomRequest(urlString: urlString)
+       if bookName != "" {
+           let lowerBookName = bookName.lowercased()
+           let replaceBookName = lowerBookName.replacingOccurrences(of: " ", with: "_")
+           print("@@@@@@@@",replaceBookName)
+           let urlString = "\(BookUrl)q=\(replaceBookName)"
+          perfomRequest(urlString: urlString)
+       }
    }
    
    func perfomRequest(urlString: String) {
@@ -61,6 +67,7 @@ struct DetailManager {
            let descriptionApi = decodedData.description
            let titleApi = decodedData.title
            let detailid = DetailModel(description: descriptionApi, title: titleApi)
+           print("####",detailid.description)
            return detailid
            
        } catch {

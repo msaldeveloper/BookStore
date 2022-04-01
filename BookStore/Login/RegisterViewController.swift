@@ -154,7 +154,7 @@ class RegisterViewController: UIViewController {
         emailText = UITextField()
         emailText?.backgroundColor = .clear
         emailText?.attributedPlaceholder = NSAttributedString(
-            string:  "example@gmail.com",
+            string:  "correo@gmail.com",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.7 )]
         )
         emailText?.font = .systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
@@ -255,6 +255,7 @@ class RegisterViewController: UIViewController {
         print("Registro")
         if let nombre = userText?.text{
             if nombre != ""{
+                print(nombre)
                 if let mail = emailText?.text {
                     if let contrasena = passwordText?.text{
                         if let contrasenaConfirmada = confirmText?.text{
@@ -325,11 +326,28 @@ class RegisterViewController: UIViewController {
         Auth.auth().createUser(withEmail: correo, password: pass) { [self] user, error in
             if user != nil{
                 print("Usuario creado")
-                let campos = ["nombre": userText?.text, "email": self.emailText?.text, "id": Auth.auth().currentUser?.uid]
-                ref?.child("users").child(Auth.auth().currentUser!.uid).setValue(campos)
-                let BooksViewController = BooksViewController()
-                BooksViewController.modalPresentationStyle = .fullScreen
-                present(BooksViewController,animated: true,completion:{print("register button press validated")} )
+                let  tabBarVC = UITabBarController()
+                let home = BooksViewController()
+                let search = SearcherViewController()
+                let logOut = ViewController()
+                home.title = "Home"
+                search.title = "Search"
+                logOut.title = "LogOut"
+                UITabBar.appearance().tintColor = .black
+                UITabBar.appearance().isTranslucent = true
+                UITabBar.appearance().backgroundColor = UIColor.gray
+                home.tabBarItem.image = UIImage(named: "casa25")
+                search.tabBarItem.image = UIImage(named: "search25")
+                logOut.tabBarItem.image = UIImage(named: "logout25")
+
+                                //UITabBar.appearance().backgroundImage = UIImage(named: "logo")
+                
+                
+                
+                
+                tabBarVC.setViewControllers([home,search,logOut], animated: false)
+                tabBarVC.modalPresentationStyle = .fullScreen
+                present(tabBarVC, animated: true, completion: nil)
                 
                 //self.dismiss(animated: true, completion: nil)
             }else{

@@ -18,12 +18,10 @@ class BooksViewController: UIViewController , BookManagerDelegate{
     var dataSource : bookObject?
     var topImageView : UIImageView?
     var dBRef : DatabaseReference?
-    var seachInput : UITextField?
-    var searchBook: UIView?
-    var searchButton: UIButton?
     var userName : UILabel?
     var backImage : UIButton?
     var bookManager = BookManager()
+    var logo : UIImageView?
     
     
     
@@ -48,29 +46,36 @@ class BooksViewController: UIViewController , BookManagerDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        dBRef = Database.database().reference()
         bookManager.delegate = self
         view.backgroundColor = backgroundColor
+        dBRef = Database.database().reference()
         initUi()
         getData()
-        searcher()
-        searButton()
-        backImage = UIButton()
-        backImage?.setImage(UIImage(named: "back"), for: .normal)
-        backImage?.addTarget(self, action:#selector(backAction) , for: .touchUpInside)
-        backImage?.tintColor = UIColor.red
-        view.addSubview(backImage!)
-        backImage?.addAnchorsAndSize(width: 30, height: 30, left: 20, top: 55, right: nil, bottom: nil)
+        
+
         
     }
     @objc func backAction(){
-        print("Back")
-        dismiss(animated: true)
+        let alerta = UIAlertController(title: "Cerrar sesión", message: "¿Esta a punto de Cerrar Sesion?", preferredStyle: .alert)
+        let aceptar = UIAlertAction(title: "Aceptar", style: .default) { _ in
+            try! Auth.auth().signOut()
+            self.dismiss(animated: true, completion: nil)
+        }
+        let cancelar = UIAlertAction(title: "Cancelar", style: .default, handler: nil)
+        alerta.addAction(aceptar)
+        alerta.addAction(cancelar)
+        present(alerta, animated: true, completion: nil)
     }
     
 
     
     func initUi() {
+        backImage = UIButton()
+        backImage?.setImage(UIImage(named: "back"), for: .normal)
+        backImage?.addTarget(self, action:#selector(backAction) , for: .touchUpInside)
+        backImage?.tintColor = UIColor.red
+        view?.addSubview(backImage!)
+        backImage?.addAnchorsAndSize(width: 30, height: 30, left: 20, top: 55, right: nil, bottom: nil)
         
         topImageView = UIImageView(frame: .zero)
         topImageView?.image = UIImage(named: "topImage")
@@ -81,6 +86,23 @@ class BooksViewController: UIViewController , BookManagerDelegate{
         topImageView?.layer.insertSublayer(topImageGradient, at: 0)
         view.addSubview(topImageView!)
         topImageView?.addAnchorsAndSize(width: nil, height: 200, left: 0, top: 0, right: 0, bottom: nil)
+        
+        
+        backImage = UIButton()
+        backImage?.setImage(UIImage(named: "back"), for: .normal)
+        backImage?.tintColor = UIColor.red
+        topImageView?.addSubview(backImage!)
+        backImage?.addAnchorsAndSize(width: 30, height: 30, left: 20, top: 55, right: nil, bottom: nil)
+        
+        
+        
+        
+        // MARK: - LOGO
+        logo = UIImageView()
+        logo?.image = UIImage(named: "logo")
+        logo?.contentMode = .scaleAspectFit
+        topImageView?.addSubview(logo!)
+        logo?.addAnchorsAndSize(width: 100, height: 100, left: 20, top: 150, right: 20, bottom: nil)
         
         userName = UILabel()
         userName?.font = .boldSystemFont(ofSize: 40)
@@ -94,12 +116,13 @@ class BooksViewController: UIViewController , BookManagerDelegate{
         dBRef?.child("users").child(userId).observeSingleEvent(of: .value, with: { [self] (snatshop) in
             let value = snatshop.value as? NSDictionary
             
-            userName?.text = "Hola \(value!["nombre"] ?? "")!"
-            print(value!["nombre"] ?? "")
+            userName?.text = "Hola \(value?["nombre"] ?? "") "
+            print(value?["nombre"] ?? "")
         })
+        userName?.text = "Adios"
         topImageView?.addSubview(userName!)
         userName?.addAnchorsAndSize(width: nil, height: 50, left: nil, top: 50, right: 30, bottom: nil)
-                
+        
         
         
         booksCollectionView.delegate = self
@@ -114,39 +137,9 @@ class BooksViewController: UIViewController , BookManagerDelegate{
         
         
     }
-    func searcher(){
-        searchBook = UIView()
-        searchBook?.backgroundColor = .white
-        searchBook?.layer.cornerRadius = 10
-        searchBook?.layer.borderColor = CGColor(red: 0, green: 0, blue: 0, alpha: 1)
-        searchBook?.layer.borderWidth = 1
-        view.addSubview(searchBook!)
-        searchBook?.addAnchorsAndSize(width: nil, height: 50, left: 20, top: 15, right: 20, bottom: nil, withAnchor: .top, relativeToView: topImageView)
-        
-        seachInput = UITextField()
-        seachInput?.placeholder = "  Ingresa tu Busqueda"
-        searchBook?.addSubview(seachInput!)
-        seachInput?.addAnchorsAndSize(width: nil, height: 50, left: 5, top: nil, right: 40, bottom: nil)
-        
-    }
-        func searButton(){
-            searchButton = UIButton()
-            searchButton?.backgroundColor = .clear
-            searchButton?.setImage(UIImage(named: "searcher"), for: .normal)
-            searchBook?.addSubview(searchButton!)
-            searchButton?.addAnchorsAndSize(width: 40, height: 40, left: nil, top: 5, right: 5, bottom: 5)
-            let tapRegisterButton = UITapGestureRecognizer(target: self, action: #selector(newSearchButton))
-            searchButton?.addGestureRecognizer(tapRegisterButton)
-        }
-        @objc func newSearchButton() {
-            
-            bookManager.fetchBook(bookName: seachInput?.text ?? "")
-            //drinkManager.getDrink(drinkName: drinkInput?.text ?? "")
-            
-
     
-        }
-    func didUpdateBook(_ bookManager: BookManager, bookid: BookModel) {
+        
+        func didUpdateBook(_ bookManager: BookManager, bookid: BookModel) {
         DispatchQueue.main.async {
             let RegisterViewController = detailSearcherViewController()
             RegisterViewController.modalPresentationStyle = .fullScreen

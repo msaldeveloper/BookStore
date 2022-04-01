@@ -84,7 +84,7 @@ class detailProductViewController: UIViewController {
     }
     
     func bookDescription() {
-        productContentView = UIView(frame: CGRect(x: 10, y: height/2.2, width: width - 20, height: height/4))
+        productContentView = UIView(frame: CGRect(x: 10, y: height/2.15, width: width - 20, height: height/4))
         productContentView?.backgroundColor = .white
         productContentView?.layer.cornerRadius = 20
         view.addSubview(productContentView!)

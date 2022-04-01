@@ -105,7 +105,7 @@ class ViewController: UIViewController {
         emailText = UITextField()
         emailText?.backgroundColor = .clear
         emailText?.attributedPlaceholder = NSAttributedString(
-            string:  "example@gmail.com",
+            string:  "correo@gmail.com",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.7 )]
         )
         emailText?.font = .systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
@@ -131,7 +131,7 @@ class ViewController: UIViewController {
         passwordText = UITextField()
         passwordText?.backgroundColor = .clear
         passwordText?.attributedPlaceholder = NSAttributedString(
-            string:  "password",
+            string:  "contraseña",
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(red: 0, green: 0, blue: 0, alpha: 0.7 )]
         )
         passwordText?.font = .systemFont(ofSize: 20, weight: UIFont.Weight.semibold)
@@ -214,7 +214,7 @@ class ViewController: UIViewController {
                 
                 
                 
-                tabBarVC.setViewControllers([home,search,logOut], animated: false)
+                tabBarVC.setViewControllers([home,search], animated: false)
                 tabBarVC.modalPresentationStyle = .fullScreen
                 present(tabBarVC, animated: true, completion: nil)
                 
@@ -272,12 +272,7 @@ class ViewController: UIViewController {
                 tabBarVC.setViewControllers([home,search], animated: false)
                 tabBarVC.modalPresentationStyle = .fullScreen
                 present(tabBarVC, animated: true, completion: nil)
-                
-                
-                
-                
-                
-                
+
             }
         }
     }

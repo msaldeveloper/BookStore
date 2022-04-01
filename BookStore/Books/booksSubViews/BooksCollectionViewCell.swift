@@ -64,7 +64,7 @@ class BooksCollectionViewCell: UICollectionViewCell {
         imageProduct.addAnchorsAndSize(width: 120, height: 180, left: 10, top: 10, right: nil, bottom: nil)
         
         self.addSubview(nameProduct)
-        nameProduct.addAnchorsAndSize(width: 180, height: 80, left: 10, top: 40, right: nil, bottom: nil, withAnchor: .left, relativeToView: imageProduct)
+        nameProduct.addAnchorsAndSize(width: 150, height: 80, left: 10, top: 40, right: nil, bottom: nil, withAnchor: .left, relativeToView: imageProduct)
         
         self.addSubview(nameAuthor)
         nameAuthor.addAnchorsAndSize(width: 150, height: 40, left: 10, top: 80, right: nil, bottom: nil, withAnchor: .left, relativeToView: imageProduct)
@@ -75,7 +75,7 @@ class BooksCollectionViewCell: UICollectionViewCell {
         nameCategory.addAnchors(left: nil, top: 5, right: nil, bottom: nil, withAnchor: .top, relativeToView: nameAuthor)
         
         self.addSubview(forwardImage)
-        forwardImage.addAnchorsAndSize(width: 50, height: 50, left: nil, top: 100, right: 20, bottom: nil)
+        forwardImage.addAnchorsAndSize(width: 50, height: 50, left: nil, top: 120, right: 20, bottom: nil)
         
     }
     func setDataBook(libro : Libro){

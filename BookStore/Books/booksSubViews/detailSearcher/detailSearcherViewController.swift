@@ -15,7 +15,7 @@ import Foundation
 
 import UIKit
 
-class detailSearcherViewController: UIViewController, BookManagerDelegate{
+class detailSearcherViewController: UIViewController{
     
     
     var  backImage : UIButton?
@@ -24,6 +24,7 @@ class detailSearcherViewController: UIViewController, BookManagerDelegate{
     var width = UIScreen.main.bounds.width
     var height = UIScreen.main.bounds.height
     var backgroundColor = UIColor(displayP3Red: 219/255, green: 219/255, blue: 219/255, alpha: 1)
+    var myBookManager = BookManager()
     //var bookTarget :  ProductOptionView?
     //var bookDescription : ProductOptionViewDescription?
     //var bookAuthor : ProductOptionViewAuthor?
@@ -42,10 +43,11 @@ class detailSearcherViewController: UIViewController, BookManagerDelegate{
         super.viewDidLoad()
         view.backgroundColor = backgroundColor
         // Do any additional setup after loading the view.
+        myBookManager.delegate = self
         initUi()
         bookTarget()
         bookDescription()
-        bookAuthor()
+        //bookAuthor()
         
     }
     
@@ -145,7 +147,7 @@ class detailSearcherViewController: UIViewController, BookManagerDelegate{
         
         productDescription = UILabel(frame: CGRect(x: 30, y: 100, width: width/2 + 130 - 30, height: 120))
         productDescription?.backgroundColor = .clear
-        productDescription?.text = "by Cicero are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by Rackham"
+        productDescription?.text = "by Ciceo are also reproduced in their exact original form, accompanied by English versions from the 1914 translation by Rackham"
         productDescription?.numberOfLines = 0
         productDescription?.font = UIFont(name: "Helvetica", size: 15)
         productDescription?.sizeToFit()
@@ -221,54 +223,20 @@ class detailSearcherViewController: UIViewController, BookManagerDelegate{
         productContentView?.addSubview(productImage!)
     }
     
+    
+
+}
+extension detailSearcherViewController: BookManagerDelegate{
+    
     func didUpdateBook(_ bookManager: BookManager, bookid: BookModel) {
+        print("33333",bookid.title)
         print("######",bookid.title)
         DispatchQueue.main.async {
             print("######",bookid.title)
             self.productName?.text = "\(bookid.title)"
         }
-//        DispatchQueue.main.async {
-//            self.foundDrinkTitle?.text = "\(drink.name)"
-//            self.foundDrinkType?.text = "\(drink.type!)"
-//            if let url = NSURL(string: drink.image!) {
-//                print(type(of: url), url)
-//                if let data = NSData(contentsOf: url as URL) {
-//                    self.drinkImg?.image = UIImage(data: data as Data)
-//                    self.drinkImg?.layer.cornerRadius = 10
-//                    self.drinkImg?.layer.masksToBounds = true
-//              }
-//            }
-//            self.drinkDesc?.text = "\(drink.instructions!)"
-//
-//        }
     }
-//    func createProductView(){
-//        productContentView = UIView(frame: CGRect(x: 10, y: height/5, width: width - 20, height: height/4))
-//        productContentView?.backgroundColor = .red
-//        view.addSubview(productContentView!)
-//
-//        productCard = UIView(frame: CGRect(x: 10, y: height/8, width: width - 40, height: height/8))
-//        productCard?.backgroundColor = .white
-//        productCard?.layer.cornerRadius = 20
-//
-//        productContentView?.addSubview(productCard!)
-//
-//        productImage = UIImageView(frame: CGRect(x: 20, y: 0, width: (width - 40)/3, height: height/4 - 20))
-//        productImage?.backgroundColor = .blue
-//
-//        productContentView?.addSubview(productImage!)
-//
-//    }
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
+
 

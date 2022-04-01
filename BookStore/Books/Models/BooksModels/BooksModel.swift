@@ -7,7 +7,6 @@
 
 import Foundation
 
-import Foundation
 struct BookModel {
     let title: String
     let first : Int?
